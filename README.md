@@ -25,7 +25,7 @@ Initial variable selection occurred using two ways; researching literature to se
 blood pressure, and asthma (each their own variable).  Later in our experimentation, we additionally added variables that described health status (ranging excellent to poor), if they had difficulty walking, whether someone exercised or not, if they lived in a metropolitan area, and a binarized race variable (split between non-Hispanic White and non-White or Hispanic; used to replace initial race variable used) (see Appendix G).  These additional variables were chosen to see whether they would positively impact our modeling. Total of 20 variables were used throughout. To further assess significance of the top attributes, attribute selection through correlation evaluation using Ranker method provided top ranking attributes. Chi-square analysis of the top five attributes for both datasets were calculated based off Dataset 2 data. 
 
 
-Preprocessing
+**Preprocessing**
 
 The first steps in preprocessing included isolating the chosen variables in SQL, using Microsoft SQL Server Management Studio 18. Once the raw data file was created, it was uploaded to STATA Basic Edition version 17.0. The raw datafile included all variables mentioned previously with an initial observation count of 438,693. The BRFSS dataset includes variables in numeric and categorical form; for example, the age category was split between Male and Female, where Male = 1 and Female = 2. For other variables BRFSS coded missings as either an outlier value such as “9”, “99”, “999”, or left as blank. See Appendix G.  
 Two separate datasets were created. The first dataset assessed descriptive statistics of the raw file and isolated the BMI variable. Secondly, was producing the outcome variable. To isolate normal, overweight, and obese weight individuals, BRFSS 21 coded a variable called BMI5CAT that split BMI into five categories of  1 – 5 in order of underweight (BMI < 18.5), normal weight (18.5 <= BMI < 25) , overweight ( 25 <= BMI < 30 BMI), obese (BMI > 30) and the fifth category as BLANK designated for those who did not know, refused, or information was missing (BLANK category was shown as an empty cell with no value). Values of 1 and BLANKS (underweight and missing) were deleted. After deletion, BMI5CAT was recategorized, binarized, and re-named to “n_oo” (normal_overweight/obese). All values of overweight and obese (value 3 and value 4) were grouped together. To binarize, where BMI5CAT = 2 (normal weight), was marked as 0; where BMI5CAT = 2 or 3 (overweight and obese), was marked as 1. Dataset was now made up of 385,554 observations, where Class 0 = 115,489 and Class 1 = 270,065 observations. Already, the dataset is skewed towards Class 1. 
@@ -35,7 +35,7 @@ Upon completion of the binarization of variables in STATA, additional statistica
 The final step in preprocessing was uploading the dataset files into WEKA software version 3.8.6 and conducting attribute selection. For this, variables selected were changed from Numeric to Nominal, and Correlation Attribute Evaluation using Ranker method was conducted to assess the best attributes. Table 1 shows the differences in attributes selected between Datasets. For Dataset 1, the top 10 attributes were chosen, with the cutoff happening to be .025; variables for race, smoking habit, vegetable intake, and income were removed before running through classifiers for Dataset 1. For Dataset 2, the main purpose was to test different attributes against the outcome variable and additionally resample to find significant differences. Resampling was done at 50%, testing the attributes above .025 correlation.
 Classifiers used included ones which are typically associated with classification models; Logistic Regression, Multiclass Classifier, Naïve Bayes, Random Forest, IBk Nearest Neighbors. We additionally tested out Logitboost and RandomTree. In Weka, tests were run at a 66% percentage split. 
  
- Table 1.  Ranked attributes using Correlation Attribute Evaluation in Weka using select variables show the top 5 attributes to consist of chronic conditions, Sex, Energy Output and Lifestyle factors of health status and ability to walk. 
+ Table 1.  Ranked attributes using Correlation Attribute Evaluation in Weka using select variables show the top 5 attributes to consist of chronic conditions, Sex, Energy Output and Lifestyle factors of health status and ability to walk. (not included, please email to see)
 
 
 **Results **
@@ -44,42 +44,12 @@ For Dataset 2, Naïve Bayes, Logistic, Random Forest, and IBk (Nearest Neighbors
 Testing the top 10 attributes within Dataset 2 showed best ROC using RandomForest and Nearest Neighbors classifiers (ROC = .680).  Among the 50% resampled data, which used the top 15 attributes after attribute selection methods, IBk (nearest neighbors) produced best ROC value (.679).
 Testing with Datasets 1 and 2
 
-
-	Dataset 1 	Dataset 2
-	Classifier	Precision	Recall	ROC	Precision	Recall	ROC
-Class 0	Naïve Bayes	0.497	0.193	0.661	0.476	0.382	0.663
-Class 1	 	0.727	0.917	0.661	0.756	0.820	0.663
-Class 0	Logistic 	0.523	0.116	0.667	0.545	0.143	0.684
-	 	0.717	0.955	0.667	0.722	0.949	0.684
-Class 0	Multiclass 	0.523	0.116	0.667	 		
-	 	0.717	0.955	0.667	 		
-Class 0	Logitboost	0.52	0.125	0.665	 		
-	 	0.718	0.951	0.665	 		
-Class 0	Random Tree	0.527	0.148	0.671	 		
-		0.722	0.943	0.671	 		
-Class 0	Random Forest				0.476	0.269	0.651
-	 				0.737	0.873	0.651
-Class 0	IBK				0.451	0.299	0.645
-					0.738	0.845	0.645
-Table 2. Testing classifiers against raw datasets after attribute selection in Dataset 1 and all attributes in Dataset 2 
-
-
-Dataset 2 
-	Top 10 attributes	Resampled at 50%
-	Classifier	Precision	Recall	ROC	Precision	Recall	ROC
-Class 0 	Naïve Bayes	0.489	0.35	0.662	0.471	0.4	0.661
-Class 1	 	0.752	0.844	0.662	0.759	0.808	0.661
-Class 0	Logistic 	0.545	0.15	0.675	0.552	0.151	0.674
-	 	0.723	0.946	0.675	0.723	0.948	0.674
-Class 0	Random Forest	0.552	0.146	0.680	0.512	0.239	0.672
-	 	0.722	0.949	0.680	0.735	0.903	0.672
-Class 0	IBk	0.547	0.143	0.679	0.547	0.153	0.679
-	 	0.723	0.946	0.680	0.723	0.946	0.679
-Table 2.1 Testing using various classifiers for Datasets 2 using top 10 attributes and 50% resampled data with attribute selection narrowing down to top 15 attributes (cutoff .025).
+	 	
+Table 2.1 Testing using various classifiers for Datasets 2 using top 10 attributes and 50% resampled data with attribute selection narrowing down to top 15 attributes (cutoff .025). (not included, please email to see)
 
 Further analysis of attributes consisted of conducting chi-square analysis of the top five ranking attributes in both datasets (See Table 3). The variable for Sex was one which stood out, holding a correlation value ranging from .9 to .1 based on dataset type (see Table 3). A tabulation and chi-square analysis in STATA, shown in Table 3 where Male = 0 and Female = 1, shows that while there is a higher percentage of females in the dataset, 74.5% are overweight or obese. Including, 80.3% of those High Blood Pressure, 85.3% of those with Diabetes, 80.3% of those who had difficulty walking, were also Overweight/Obese. Interestingly, those who rated themselves as having Excellent/Very Good health status (77.4%) and those who Answered Yes to engaging in Physical Activity (70%), were also Overweight/Obese. 
 
-Table 3. Chi Square Analysis of top-ranking attributes using Dataset 2 data
+Table 3. Chi Square Analysis of top-ranking attributes using Dataset 2 data (not included, please email to see).
 
 **Analysis and Discussion**
 Based on our results, if we were to solely compare ROC values, then Dataset 2 produced the highest at .684 using Logistic. Narrowing down attributes to the top 10 without resampling provided precision and recall numbers closest to 1, using Random Forest and IBk.  However, when assessing the overall values of each classifier per dataset, Naïve Bayes consistently showed values closest to 1 with the least difference between Class 0 and Class 1 (normal and Overweight/Obese) while using either dataset. Among the datasets, Dataset 2 provided higher numbers for all measures.  This may have occurred for a variety of reasons: 
